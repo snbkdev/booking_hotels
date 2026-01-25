@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     DB_ECHO: bool = False
     DB_POOL_SIZE: int = 20
 
+    SECRET_KEY: str
+    ALGORITHM: str
+
     @computed_field
     @property
     def get_database_url(self) -> str:
