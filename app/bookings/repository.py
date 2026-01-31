@@ -1,6 +1,6 @@
 from app.services.base import BaseDAO
 from app.bookings.models import Bookings
-from app.hotels.models import Rooms
+from app.hotels.rooms.models import Rooms
 from sqlalchemy import select, func, and_, or_, insert
 from datetime import date
 from ..db import async_session_maker
@@ -59,3 +59,24 @@ class BookingDAO(BaseDAO):
                 return new_booking.scalar()
             else:
                 return RoomCannotBeBooked
+    
+    
+    @classmethod
+    async def find_all_by_user(cls, user_id: int):
+        """Найти все бронирования пользователя с информацией о номере"""
+        async with async_session_maker() as session:
+            query = (
+                select(
+                    Bookings,
+                    Rooms.name.label("room_name"),
+                    Rooms.description.label("room_description"),
+                    Rooms.services.label("room_services"),
+                    Rooms.image_id.label("room_image_id")
+                )
+                .join(Rooms, Bookings.room_id == Rooms.id)
+                .where(Bookings.user_id == user_id)
+                .order_by(Bookings.date_from.desc())
+            )
+            
+            result = await session.execute(query)
+            return result.mappings().all()

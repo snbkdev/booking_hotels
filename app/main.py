@@ -5,10 +5,14 @@ from pydantic import BaseModel
 
 from app.users.router import router as router_users
 from app.bookings.router import router as router_bookings
+from app.hotels.router import router as hotels_router
+from app.hotels.rooms.router import router as rooms_router
 
 app = FastAPI()
 
 app.include_router(router_users)
+app.include_router(hotels_router)
+app.include_router(rooms_router)
 app.include_router(router_bookings)
 
 class HotelsSearchArgs:

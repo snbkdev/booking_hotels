@@ -16,3 +16,9 @@ class SBooking(BaseModel):
     total_days: Optional[Union[int, float]] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+class SBookingWithDetails(SBooking):
+    room_name: Optional[Union[int, str]] = None
+    room_description: Optional[str] = None
+    room_services: Optional[dict] = None
+    room_image_id: Optional[Union[int, str]] = None
