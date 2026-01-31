@@ -1,35 +1,37 @@
 from fastapi import APIRouter, Depends
 
 from app.bookings.repository import BookingDAO
-from app.bookings.schemas import SBooking
 from app.users.models import Users
 from app.users.dependencies import get_current_user
+from datetime import date
+from pydantic import BaseModel
+from ..exceptions import RoomCannotBeBooked
 
 router = APIRouter(
     prefix="/bookings",
     tags=["Bookings"],
 )
 
-# @router.get("", response_model=list[SBooking])
-# async def get_bookings():
-#     bookings = await BookingDAO.find_all()
-    
-#     result = []
-#     for booking in bookings:
-#         if hasattr(booking, "Bookings"):
-#             result.append(SBooking.model_validate(booking.Bookings))
-#         elif isinstance(booking, dict) and "Bookings" in booking:
-#             result.append(SBooking.model_validate(booking["Bookings"]))
-#         elif hasattr(booking, "__dict__"):
-#             data = {k: v for k, v in booking.__dict__.items() if not k.startswith('_')}
-#             result.append(SBooking.model_validate(data))
-#         else:
-#             result.append(SBooking.model_validate(booking))
-    
-#     return result
+class BookingCreate(BaseModel):
+    room_id: int
+    date_from: date
+    date_to: date
 
 @router.get("")
 async def get_bookings(user: Users = Depends(get_current_user)):
-    #print(user, type(user), user.email)
-    
     return await BookingDAO.find_all(user_id=user.id)
+
+@router.post("")
+async def add_booking(
+    booking: BookingCreate,
+    user: Users = Depends(get_current_user)
+    ):
+    print(f"Received booking: {booking}")
+    booking = await BookingDAO.add(
+        user_id=user.id,
+        room_id=booking.room_id,
+        date_from=booking.date_from,
+        date_to=booking.date_to
+    )
+    if not booking:
+        raise RoomCannotBeBooked
