@@ -173,3 +173,5 @@ pyrightconfig.json
 info.txt
 
 *.sql
+
+static/
