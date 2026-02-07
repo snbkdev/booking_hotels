@@ -47,7 +47,11 @@ class HotelDAO(BaseDAO):
             # Основной запрос
             query = (
                 select(
-                    Hotels,
+                    Hotels.id,
+                    Hotels.name,
+                    Hotels.location,
+                    Hotels.services,
+                    Hotels.image_id,
                     total_rooms_subq.c.total_rooms,
                     total_rooms_subq.c.total_quantity,
                     func.coalesce(booked_rooms_subq.c.booked_count, 0).label("booked_count"),

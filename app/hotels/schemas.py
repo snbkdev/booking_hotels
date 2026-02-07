@@ -7,7 +7,7 @@ class SHotel(BaseModel):
     id: int
     name: str
     location: str
-    services: Optional[dict] = None
+    services: list[str]
     rooms_quantity: int
     image_id: int
 

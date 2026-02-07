@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotels Page</title>
+</head>
+<body>
+    <p>Добро пожаловать на сайт!!!</p>
+    <div>
+        {% for hotel in hotels %}
+            <div>
+                <h1>{{hotel.name}}</h1>
+                <h1>{{hotel.location}}</h1>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
